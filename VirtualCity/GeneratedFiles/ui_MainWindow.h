@@ -50,6 +50,7 @@ public:
     QAction *actionSaveGeometry;
     QAction *actionViewContourRendering;
     QAction *actionCamera;
+    QAction *actionGenerateCity;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -118,6 +119,8 @@ public:
         actionViewContourRendering->setCheckable(true);
         actionCamera = new QAction(MainWindowClass);
         actionCamera->setObjectName(QStringLiteral("actionCamera"));
+        actionGenerateCity = new QAction(MainWindowClass);
+        actionGenerateCity->setObjectName(QStringLiteral("actionGenerateCity"));
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         MainWindowClass->setCentralWidget(centralWidget);
@@ -153,6 +156,8 @@ public:
         menuView->addAction(actionViewHatching);
         menuView->addSeparator();
         menuView->addAction(actionViewRefresh);
+        menuTools->addAction(actionGenerateCity);
+        menuTools->addSeparator();
         menuTools->addAction(actionCamera);
 
         retranslateUi(MainWindowClass);
@@ -190,6 +195,7 @@ public:
         actionSaveGeometry->setShortcut(QApplication::translate("MainWindowClass", "Ctrl+S", 0));
         actionViewContourRendering->setText(QApplication::translate("MainWindowClass", "Contour Rendering", 0));
         actionCamera->setText(QApplication::translate("MainWindowClass", "Camera", 0));
+        actionGenerateCity->setText(QApplication::translate("MainWindowClass", "Generate City", 0));
         menuFile->setTitle(QApplication::translate("MainWindowClass", "File", 0));
         menuView->setTitle(QApplication::translate("MainWindowClass", "View", 0));
         menuTools->setTitle(QApplication::translate("MainWindowClass", "Tools", 0));

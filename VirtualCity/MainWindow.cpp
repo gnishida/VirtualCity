@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 	connect(ui.actionViewLineRendering, SIGNAL(triggered()), this, SLOT(onViewRendering()));
 	connect(ui.actionViewHatching, SIGNAL(triggered()), this, SLOT(onViewRendering()));
 	connect(ui.actionViewRefresh, SIGNAL(triggered()), this, SLOT(onViewRefresh()));
+	connect(ui.actionGenerateCity, SIGNAL(triggered()), this, SLOT(onGenerateCity()));
 	connect(ui.actionCamera, SIGNAL(triggered()), this, SLOT(onCamera()));
 
 	glWidget = new GLWidget3D(this);
@@ -89,6 +90,10 @@ void MainWindow::onViewRefresh() {
 	if (fileLoaded) {
 		glWidget->loadCGA(filename.toUtf8().data());
 	}
+}
+
+void MainWindow::onGenerateCity() {
+	glWidget->generateCity();
 }
 
 void MainWindow::onCamera() {

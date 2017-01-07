@@ -28,6 +28,7 @@ public slots:
 	void onViewShadow();
 	void onViewRendering();
 	void onViewRefresh();
+	void onGenerateCity();
 	void onCamera();
 };
 

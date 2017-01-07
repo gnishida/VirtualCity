@@ -49,6 +49,8 @@
     <property name="title">
      <string>Tools</string>
     </property>
+    <addaction name="actionGenerateCity"/>
+    <addaction name="separator"/>
     <addaction name="actionCamera"/>
    </widget>
    <addaction name="menuFile"/>
@@ -212,6 +214,11 @@
   <action name="actionCamera">
    <property name="text">
     <string>Camera</string>
+   </property>
+  </action>
+  <action name="actionGenerateCity">
+   <property name="text">
+    <string>Generate City</string>
    </property>
   </action>
  </widget>

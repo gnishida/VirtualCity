@@ -35,6 +35,8 @@ public:
 public:
 	GLWidget3D(MainWindow *parent = 0);
 
+	void generateCity();
+	std::vector<boost::shared_ptr<glutils::Face>> generateBuilding(const glm::mat4& modelMat, std::vector<cga::Grammar>& gramamr);
 	void drawScene();
 	void render();
 	void loadCGA(char* filename);

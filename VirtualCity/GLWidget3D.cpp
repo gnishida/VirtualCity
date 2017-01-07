@@ -34,6 +34,91 @@ GLWidget3D::GLWidget3D(MainWindow *parent) : QGLWidget(QGLFormat(QGL::SampleBuff
 	light_mvpMatrix = light_pMatrix * light_mvMatrix;
 }
 
+void GLWidget3D::generateCity() {
+	std::vector<std::vector<cga::Grammar>> grammars(1);
+
+	try {
+		cga::parseGrammar("cga/03.xml", grammars[0]);
+	}
+	catch (const std::string& ex) {
+		std::cout << "ERROR:" << std::endl << ex << std::endl;
+	}
+	catch (const char* ex) {
+		std::cout << "ERROR:" << std::endl << ex << std::endl;
+	}
+
+	for (auto it = grammars[0][0].attrs.begin(); it != grammars[0][0].attrs.end(); ++it) {
+		std::cout << it->first << ": " << it->second.value << std::endl;
+	}
+
+
+	renderManager.removeObjects();
+
+	try {
+		for (int x = -90; x <= 90; x += 30) {
+			for (int y = -90; y <= 90; y += 30) {
+				// set the model matrix
+				glm::mat4 modelMat = glm::translate(glm::rotate(glm::mat4(), -(float)CV_PI * 0.5f, glm::vec3(1, 0, 0)), glm::vec3(x, y, 0));
+
+				// copy the grammar
+				std::vector<cga::Grammar> copied_grammar = grammars[0];
+
+				// set depth
+				float depth = std::stof(copied_grammar[0].attrs["depth"].value);
+				depth = utils::genRand(depth * 0.8, depth * 1.2);
+				copied_grammar[0].attrs["depth"].value = std::to_string(depth);
+
+				// set height
+				float height = std::stof(copied_grammar[0].attrs["height"].value);
+				height = utils::genRand(height * 0.8, height * 1.2);
+				copied_grammar[0].attrs["height"].value = std::to_string(height);
+
+				// set width
+				float width = std::stof(copied_grammar[0].attrs["width"].value);
+				width = utils::genRand(width * 0.8, width * 1.2);
+				copied_grammar[0].attrs["width"].value = std::to_string(width);
+
+				// generate a building
+				std::vector<boost::shared_ptr<glutils::Face>> faces = generateBuilding(modelMat, copied_grammar);
+
+				renderManager.addFaces(faces, true);
+			}
+		}
+	}
+	catch (const std::string& ex) {
+		std::cout << "ERROR:" << std::endl << ex << std::endl;
+	}
+	catch (const char* ex) {
+		std::cout << "ERROR:" << std::endl << ex << std::endl;
+	}
+
+	renderManager.updateShadowMap(this, light_dir, light_mvpMatrix);
+
+
+	// add a ground plane
+	/*
+	std::vector<Vertex> vertices;
+	glutils::drawGrid(100, 100, 2.5, glm::vec4(0.521, 0.815, 0.917, 1), glm::vec4(0.898, 0.933, 0.941, 1), glm::translate(glm::rotate(glm::mat4(), -(float)CV_PI * 0.5f, glm::vec3(1, 0, 0)), glm::vec3(0, 0, 0.02)), vertices);
+	renderManager.addObject("grid", "", vertices, false);
+	*/
+
+	update();
+}
+
+std::vector<boost::shared_ptr<glutils::Face>> GLWidget3D::generateBuilding(const glm::mat4& modelMat, std::vector<cga::Grammar>& gramamr) {
+	cga::CGA system;
+	
+	boost::shared_ptr<cga::Shape> start = boost::shared_ptr<cga::Shape>(new cga::Rectangle("Start", "", modelMat, glm::mat4(), 0, 0, glm::vec3(1, 1, 1)));
+	system.stack.push_back(boost::shared_ptr<cga::Shape>(start));
+
+	system.derive(gramamr, true);
+
+	std::vector<boost::shared_ptr<glutils::Face>> faces;
+	system.generateGeometry(faces, false);
+
+	return faces;
+}
+
 /**
 * Draw the scene.
 */
@@ -477,6 +562,6 @@ void GLWidget3D::mouseReleaseEvent(QMouseEvent *e) {
 }
 
 void GLWidget3D::wheelEvent(QWheelEvent* e) {
-	camera.zoom(e->delta() * 0.1);
+	camera.zoom(e->delta() * (ctrlPressed ? 0.1 : 1));
 	update();
 }
