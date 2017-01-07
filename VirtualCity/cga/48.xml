@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<grammars version="1.0" author="Gen Nishida">
+    <grammar>
+        <attr range="4.000000,40.000000" value="33.1459846" name="depth"/>
+        <attr range="4.000000,40.000000" value="18.8189507" name="height"/>
+        <attr range="0.300000,1.500000" value="0.611494184" name="roof_height"/>
+        <attr range="0.300000,1.500000" value="0.613550425" name="roof_overhang"/>
+        <attr range="4.000000,40.000000" value="14.7236347" name="width"/>
+        <rule name="Roof">
+            <offset inside="TopFaceOffset" offsetDistance="roof_overhang*0.8"/>
+        </rule>
+        <rule name="Start">
+            <translate coordSystem="world" mode="rel">
+                <param value="0" type="absolute" name="x"/>
+                <param value="0" type="absolute" name="y"/>
+                <param value="0" type="absolute" name="z"/>
+            </translate>
+            <size centered="true">
+                <param value="width" type="absolute" name="xSize"/>
+                <param value="depth" type="absolute" name="ySize"/>
+                <param value="0" type="absolute" name="zSize"/>
+            </size>
+            <extrude height="height"/>
+            <comp>
+                <param value="Base" name="bottom"/>
+                <param value="Facade" name="side"/>
+                <param value="Roof" name="top"/>
+            </comp>
+        </rule>
+        <rule name="TopFaceOffset">
+            <extrude height="roof_height*0.2"/>
+            <comp>
+                <param value="RoofLedge" name="bottom"/>
+                <param value="RoofLedge" name="side"/>
+                <param value="TopFaceOffsetTop" name="top"/>
+            </comp>
+        </rule>
+        <rule name="TopFaceOffsetTop">
+            <offset inside="TopFaceOffsetTopOffset" offsetDistance="roof_overhang*0.2"/>
+        </rule>
+        <rule name="TopFaceOffsetTopOffset">
+            <extrude height="roof_height*0.8"/>
+            <comp>
+                <param value="RoofLedge" name="bottom"/>
+                <param value="RoofLedge" name="side"/>
+                <param value="TopFaceOffsetTopOffsetTop" name="top"/>
+            </comp>
+        </rule>
+        <rule name="TopFaceOffsetTopOffsetTop">
+            <offset border="RoofLedge" inside="TopFaceOffsetTopOffsetTopInside" offsetDistance="-roof_overhang"/>
+        </rule>
+        <rule name="TopFaceOffsetTopOffsetTopInside">
+            <extrude height="-roof_height*0.5"/>
+            <comp>
+                <param value="RoofLedge" name="side"/>
+                <param value="RoofTop" name="top"/>
+            </comp>
+        </rule>
+    </grammar>
+    <grammar>
+        <attr range="0.000000,100.000000" value="11" name="p00_num_floors"/>
+        <attr range="0.000000,100.000000" value="21" name="p01_num_columns"/>
+        <attr range="0.000000,100.000000" value="1.07805872" name="p02_window_width"/>
+        <attr range="0.000000,100.000000" value="1.06509483" name="p03_window_height"/>
+        <attr range="0.000000,100.000000" value="0.25259608" name="p04_tile_side_margin"/>
+        <attr range="0.000000,100.000000" value="0.292474955" name="p05_tile_top_margin"/>
+        <attr range="0.000000,100.000000" value="0.274239242" name="p06_tile_bottom_margin"/>
+        <attr range="0.000000,100.000000" value="1.53210866" name="p07_floor_side"/>
+        <attr range="0.000000,100.000000" value="1.58325076" name="p08_tile_width"/>
+        <attr range="0.000000,100.000000" value="2.03624368" name="p09_top_wall_height"/>
+        <attr range="0.000000,100.000000" value="1.631809" name="p10_floor_height"/>
+        <attr range="0.000000,100.000000" value="2.09642243" name="p11_base_height"/>
+        <attr range="0.000000,100.000000" value="0.317004532" name="p12_window_width2"/>
+        <attr range="0.000000,100.000000" value="0.863139212" name="p13_window_height2"/>
+        <attr range="0.000000,100.000000" value="0.569716752" name="p14_tile_out_margin2"/>
+        <attr range="0.000000,100.000000" value="0.645387352" name="p15_tile_in_margin2"/>
+        <attr range="0.000000,100.000000" value="0.380730718" name="p16_tile_top_margin2"/>
+        <attr range="0.000000,100.000000" value="0.387939006" name="p17_tile_bottom_margin2"/>
+        <attr range="0.000000,100.000000" value="0.390328109" name="p18_door_top"/>
+        <attr range="0.000000,100.000000" value="1.70609426" name="p19_door_height"/>
+        <attr range="0.000000,100.000000" value="1.21547747" name="p20_top_window_height"/>
+        <attr range="0.000000,100.000000" value="0.365978181" name="p21_top_tile_top_margin"/>
+        <attr range="0.000000,100.000000" value="0.45478797" name="p22_top_tile_bottom_margin"/>
+        <attr range="0.000000,100.000000" value="0.949479342" name="p23_top_window_height2"/>
+        <attr range="0.000000,100.000000" value="0.743133724" name="p24_top_tile_top_margin2"/>
+        <attr range="0.000000,100.000000" value="0.343630612" name="p25_top_tile_bottom_margin2"/>
+        <rule name="Facade">
+            <setupProjection axesSelector="scope.xy">
+                <param value="5" type="absolute" name="texWidth"/>
+                <param value="5" type="absolute" name="texHeight"/>
+            </setupProjection>
+            <split splitAxis="y">
+                <param value="p11_base_height" type="floating" name="GroundFloorAndLedge"/>
+                <param repeat="true" value="p10_floor_height" type="floating" name="Floor"/>
+                <param value="p09_top_wall_height" type="floating" name="TopFloorAndLedge"/>
+            </split>
+        </rule>
+        <rule name="Facade2">
+            <setupProjection axesSelector="scope.xy">
+                <param value="5" type="absolute" name="texWidth"/>
+                <param value="5" type="absolute" name="texHeight"/>
+            </setupProjection>
+            <split splitAxis="y">
+                <param repeat="true" value="p10_floor_height" type="floating" name="Floor"/>
+            </split>
+        </rule>
+        <rule name="Floor">
+            <split splitAxis="x">
+                <param value="p07_floor_side" type="floating" name="LeftTile"/>
+                <param repeat="true" value="p08_tile_width" type="floating" name="Tile"/>
+                <param value="p07_floor_side" type="floating" name="RightTile"/>
+            </split>
+        </rule>
+        <rule name="GroundFloor">
+            <split splitAxis="x">
+                <param value="p07_floor_side" type="floating" name="LeftGroundTile"/>
+                <param repeat="true" value="p08_tile_width" type="floating" name="GroundTile"/>
+                <param value="p07_floor_side" type="floating" name="RightGroundTile"/>
+            </split>
+        </rule>
+        <rule name="GroundFloorAndLedge">
+            <split splitAxis="y">
+                <param value="0.92" type="relative" name="GroundFloor"/>
+                <param value="0.08" type="relative" name="Ledge"/>
+            </split>
+        </rule>
+        <rule name="GroundTile">
+            <split splitAxis="y">
+                <param value="p19_door_height" type="floating" name="GroundTile2"/>
+                <param value="p18_door_top" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="GroundTile2">
+            <split splitAxis="x">
+                <param value="p04_tile_side_margin" type="floating" name="Wall"/>
+                <param value="p02_window_width" type="floating" name="Door"/>
+                <param value="p04_tile_side_margin" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="Ledge">
+            <split splitAxis="y">
+                <param value="0.5" type="relative" name="LedgeLayer1"/>
+                <param value="0.3" type="relative" name="LedgeLayer2"/>
+                <param value="0.2" type="relative" name="LedgeLayer3"/>
+            </split>
+        </rule>
+        <rule name="LedgeLayer1">
+            <size centered="true">
+                <param value="scope.sx+0.1*2" type="absolute" name="xSize"/>
+                <param value="1" type="relative" name="ySize"/>
+                <param value="1" type="relative" name="zSize"/>
+            </size>
+            <extrude height="0.1"/>
+            <comp>
+                <param value="LedgeFace" name="side"/>
+                <param value="LedgeFace" name="top"/>
+            </comp>
+        </rule>
+        <rule name="LedgeLayer2">
+            <size centered="true">
+                <param value="scope.sx+0.3*2" type="absolute" name="xSize"/>
+                <param value="1" type="relative" name="ySize"/>
+                <param value="1" type="relative" name="zSize"/>
+            </size>
+            <extrude height="0.3"/>
+            <comp>
+                <param value="LedgeFace" name="side"/>
+                <param value="LedgeFace" name="top"/>
+            </comp>
+        </rule>
+        <rule name="LedgeLayer3">
+            <size centered="true">
+                <param value="scope.sx+0.3*1.15*2" type="absolute" name="xSize"/>
+                <param value="1" type="relative" name="ySize"/>
+                <param value="1" type="relative" name="zSize"/>
+            </size>
+            <extrude height="0.3*1.15"/>
+            <comp>
+                <param value="LedgeFace" name="side"/>
+                <param value="LedgeFace" name="top"/>
+            </comp>
+        </rule>
+        <rule name="LeftGroundTile">
+            <split splitAxis="y">
+                <param value="p19_door_height" type="floating" name="LeftGroundTile2"/>
+                <param value="p18_door_top" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="LeftGroundTile2">
+            <split splitAxis="x">
+                <param value="p14_tile_out_margin2" type="floating" name="Wall"/>
+                <param value="p12_window_width2" type="floating" name="Door"/>
+                <param value="p15_tile_in_margin2" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="LeftTile">
+            <split splitAxis="y">
+                <param value="p17_tile_bottom_margin2" type="floating" name="Wall"/>
+                <param value="p13_window_height2" type="floating" name="LeftTile2"/>
+                <param value="p16_tile_top_margin2" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="LeftTile2">
+            <split splitAxis="x">
+                <param value="p14_tile_out_margin2" type="floating" name="Wall"/>
+                <param value="p12_window_width2" type="floating" name="Window2"/>
+                <param value="p15_tile_in_margin2" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="LeftTopTile">
+            <split splitAxis="y">
+                <param value="p25_top_tile_bottom_margin2" type="floating" name="Wall"/>
+                <param value="p23_top_window_height2" type="floating" name="LeftTopTile2"/>
+                <param value="p24_top_tile_top_margin2" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="LeftTopTile2">
+            <split splitAxis="x">
+                <param value="p14_tile_out_margin2" type="floating" name="Wall"/>
+                <param value="p12_window_width2" type="floating" name="Window0"/>
+                <param value="p15_tile_in_margin2" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="RightGroundTile">
+            <split splitAxis="y">
+                <param value="p19_door_height" type="floating" name="RightGroundTile2"/>
+                <param value="p18_door_top" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="RightGroundTile2">
+            <split splitAxis="x">
+                <param value="p15_tile_in_margin2" type="floating" name="Wall"/>
+                <param value="p12_window_width2" type="floating" name="Door"/>
+                <param value="p14_tile_out_margin2" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="RightTile">
+            <split splitAxis="y">
+                <param value="p17_tile_bottom_margin2" type="floating" name="Wall"/>
+                <param value="p13_window_height2" type="floating" name="RightTile2"/>
+                <param value="p16_tile_top_margin2" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="RightTile2">
+            <split splitAxis="x">
+                <param value="p15_tile_in_margin2" type="floating" name="Wall"/>
+                <param value="p12_window_width2" type="floating" name="Window2"/>
+                <param value="p14_tile_out_margin2" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="RightTopTile">
+            <split splitAxis="y">
+                <param value="p25_top_tile_bottom_margin2" type="floating" name="Wall"/>
+                <param value="p23_top_window_height2" type="floating" name="RightTopTile2"/>
+                <param value="p24_top_tile_top_margin2" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="RightTopTile2">
+            <split splitAxis="x">
+                <param value="p15_tile_in_margin2" type="floating" name="Wall"/>
+                <param value="p12_window_width2" type="floating" name="Window0"/>
+                <param value="p14_tile_out_margin2" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="Tile">
+            <split splitAxis="y">
+                <param value="p06_tile_bottom_margin" type="floating" name="Wall"/>
+                <param value="p03_window_height" type="floating" name="Tile2"/>
+                <param value="p05_tile_top_margin" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="Tile2">
+            <split splitAxis="x">
+                <param value="p04_tile_side_margin" type="floating" name="Wall"/>
+                <param value="p02_window_width" type="floating" name="Window3"/>
+                <param value="p04_tile_side_margin" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="TopFloor">
+            <split splitAxis="x">
+                <param value="p07_floor_side" type="floating" name="LeftTopTile"/>
+                <param repeat="true" value="p08_tile_width" type="floating" name="TopTile"/>
+                <param value="p07_floor_side" type="floating" name="RightTopTile"/>
+            </split>
+        </rule>
+        <rule name="TopFloorAndLedge">
+            <split splitAxis="y">
+                <param value="0.08" type="relative" name="Ledge"/>
+                <param value="0.92" type="relative" name="TopFloor"/>
+            </split>
+        </rule>
+        <rule name="TopTile">
+            <split splitAxis="y">
+                <param value="p22_top_tile_bottom_margin" type="floating" name="Wall"/>
+                <param value="p20_top_window_height" type="floating" name="TopTile2"/>
+                <param value="p21_top_tile_top_margin" type="floating" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="TopTile2">
+            <split splitAxis="x">
+                <param value="p04_tile_side_margin" type="floating" name="Wall"/>
+                <param value="p02_window_width" type="floating" name="Window1"/>
+                <param value="p04_tile_side_margin" type="floating" name="Wall"/>
+            </split>
+        </rule>
+    </grammar>
+    <grammar>
+        <attr range="0.050000,0.050000" value="0.05" name="offset_size"/>
+        <rule name="Window0">
+            <extrude height="-0.02"/>
+            <comp>
+                <param value="WindowFrame" name="side"/>
+                <param value="WindowTileMainTop_01" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowGlassArea01">
+            <setupProjection axesSelector="scope.xy">
+                <param value="1" type="relative" name="texWidth"/>
+                <param value="1" type="relative" name="texHeight"/>
+            </setupProjection>
+            <copy name="WindowGlass"/>
+        </rule>
+        <rule name="WindowTileMainTopInside_01">
+            <extrude height="-0.05"/>
+            <comp>
+                <param value="WindowFrame" name="side"/>
+                <param value="WindowGlassArea01" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowTileMainTop_01">
+            <offset border="WindowFrame" inside="WindowTileMainTopInside_01" offsetDistance="-offset_size"/>
+        </rule>
+    </grammar>
+    <grammar>
+        <attr range="0.300000,0.300000" value="0.3" name="extrude_height"/>
+        <rule name="Window1">
+            <extrude height="extrude_height"/>
+            <comp>
+                <param value="Wall" name="side"/>
+                <param value="WindowMainTop_13" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowGlassArea_13">
+            <setupProjection axesSelector="scope.xy">
+                <param value="1" type="relative" name="texWidth"/>
+                <param value="1" type="relative" name="texHeight"/>
+            </setupProjection>
+            <split splitAxis="x">
+                <param repeat="true" value="0.5" type="relative" name="WindowGlassColumnArea_13"/>
+            </split>
+        </rule>
+        <rule name="WindowGlassCellArea_13">
+            <split splitAxis="x">
+                <param value="0.025" type="relative" name="WindowGlassSeparateTile_13"/>
+                <param value="1" type="floating" name="WindowGlassCellColumnArea_13"/>
+                <param value="0.025" type="relative" name="WindowGlassSeparateTile_13"/>
+            </split>
+        </rule>
+        <rule name="WindowGlassCellColumnArea_13">
+            <split splitAxis="y">
+                <param value="0.025" type="relative" name="WindowGlassSeparateTile_13"/>
+                <param value="1" type="floating" name="WindowGlass"/>
+                <param value="0.025" type="relative" name="WindowGlassSeparateTile_13"/>
+            </split>
+        </rule>
+        <rule name="WindowGlassColumnArea_13">
+            <split splitAxis="y">
+                <param repeat="true" value="0.3333" type="relative" name="WindowGlassCellArea_13"/>
+            </split>
+        </rule>
+        <rule name="WindowGlassSeparateTile_13">
+            <extrude height="0.08"/>
+            <comp>
+                <param value="WindowFrame" name="side"/>
+                <param value="WindowFrame" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowMainTopCenter_13">
+            <extrude height="-extrude_height"/>
+            <comp>
+                <param value="Wall" name="side"/>
+                <param value="WindowGlassArea_13" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowMainTopMiddle_13">
+            <split splitAxis="y">
+                <param value="0.15" type="relative" name="Wall"/>
+                <param value="0.7" type="relative" name="WindowMainTopCenter_13"/>
+                <param value="0.15" type="relative" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="WindowMainTop_13">
+            <split splitAxis="x">
+                <param value="0.15" type="relative" name="Wall"/>
+                <param value="0.7" type="relative" name="WindowMainTopMiddle_13"/>
+                <param value="0.15" type="relative" name="Wall"/>
+            </split>
+        </rule>
+    </grammar>
+    <grammar>
+        <attr range="0.050000,0.050000" value="0.05" name="offset_size"/>
+        <rule name="Window2">
+            <extrude height="-0.02"/>
+            <comp>
+                <param value="WindowFrame" name="side"/>
+                <param value="WindowTileMainTop_01" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowGlassArea01">
+            <setupProjection axesSelector="scope.xy">
+                <param value="1" type="relative" name="texWidth"/>
+                <param value="1" type="relative" name="texHeight"/>
+            </setupProjection>
+            <copy name="WindowGlass"/>
+        </rule>
+        <rule name="WindowTileMainTopInside_01">
+            <extrude height="-0.05"/>
+            <comp>
+                <param value="WindowFrame" name="side"/>
+                <param value="WindowGlassArea01" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowTileMainTop_01">
+            <offset border="WindowFrame" inside="WindowTileMainTopInside_01" offsetDistance="-offset_size"/>
+        </rule>
+    </grammar>
+    <grammar>
+        <attr range="0.300000,0.300000" value="0.3" name="extrude_height"/>
+        <rule name="Window3">
+            <extrude height="extrude_height"/>
+            <comp>
+                <param value="Wall" name="side"/>
+                <param value="WindowMainTop_13" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowGlassArea_13">
+            <setupProjection axesSelector="scope.xy">
+                <param value="1" type="relative" name="texWidth"/>
+                <param value="1" type="relative" name="texHeight"/>
+            </setupProjection>
+            <split splitAxis="x">
+                <param repeat="true" value="0.5" type="relative" name="WindowGlassColumnArea_13"/>
+            </split>
+        </rule>
+        <rule name="WindowGlassCellArea_13">
+            <split splitAxis="x">
+                <param value="0.025" type="relative" name="WindowGlassSeparateTile_13"/>
+                <param value="1" type="floating" name="WindowGlassCellColumnArea_13"/>
+                <param value="0.025" type="relative" name="WindowGlassSeparateTile_13"/>
+            </split>
+        </rule>
+        <rule name="WindowGlassCellColumnArea_13">
+            <split splitAxis="y">
+                <param value="0.025" type="relative" name="WindowGlassSeparateTile_13"/>
+                <param value="1" type="floating" name="WindowGlass"/>
+                <param value="0.025" type="relative" name="WindowGlassSeparateTile_13"/>
+            </split>
+        </rule>
+        <rule name="WindowGlassColumnArea_13">
+            <split splitAxis="y">
+                <param repeat="true" value="0.3333" type="relative" name="WindowGlassCellArea_13"/>
+            </split>
+        </rule>
+        <rule name="WindowGlassSeparateTile_13">
+            <extrude height="0.08"/>
+            <comp>
+                <param value="WindowFrame" name="side"/>
+                <param value="WindowFrame" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowMainTopCenter_13">
+            <extrude height="-extrude_height"/>
+            <comp>
+                <param value="Wall" name="side"/>
+                <param value="WindowGlassArea_13" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowMainTopMiddle_13">
+            <split splitAxis="y">
+                <param value="0.15" type="relative" name="Wall"/>
+                <param value="0.7" type="relative" name="WindowMainTopCenter_13"/>
+                <param value="0.15" type="relative" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="WindowMainTop_13">
+            <split splitAxis="x">
+                <param value="0.15" type="relative" name="Wall"/>
+                <param value="0.7" type="relative" name="WindowMainTopMiddle_13"/>
+                <param value="0.15" type="relative" name="Wall"/>
+            </split>
+        </rule>
+    </grammar>
+    <grammar>
+        <rule name="Window4">
+            <extrude height="-1"/>
+            <comp>
+                <param value="WindowFrame" name="side"/>
+                <param value="WindowGlassArea_07" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowGlassArea_07">
+            <setupProjection axesSelector="scope.xy">
+                <param value="1" type="relative" name="texWidth"/>
+                <param value="1" type="relative" name="texHeight"/>
+            </setupProjection>
+            <copy name="WindowGlass"/>
+        </rule>
+    </grammar>
+    <grammar>
+        <rule name="Window5">
+            <extrude height="-1"/>
+            <comp>
+                <param value="WindowFrame" name="side"/>
+                <param value="WindowGlassArea_07" name="top"/>
+            </comp>
+        </rule>
+        <rule name="WindowGlassArea_07">
+            <setupProjection axesSelector="scope.xy">
+                <param value="1" type="relative" name="texWidth"/>
+                <param value="1" type="relative" name="texHeight"/>
+            </setupProjection>
+            <copy name="WindowGlass"/>
+        </rule>
+    </grammar>
+    <grammar>
+        <attr range="0.100000,0.100000" value="0.1" name="window_side_offset_09"/>
+        <attr range="0.100000,0.100000" value="0.1" name="window_top_offset_09"/>
+        <rule name="Door">
+            <extrude height="-0.2"/>
+            <comp>
+                <param value="Wall" name="side"/>
+                <param value="EntranceTop" name="top"/>
+            </comp>
+        </rule>
+        <rule name="EntranceTop">
+            <split splitAxis="y">
+                <param value="1-window_top_offset_09" type="relative" name="EntranceTopMain"/>
+                <param value="window_top_offset_09" type="relative" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="EntranceTopMain">
+            <split splitAxis="x">
+                <param value="window_side_offset_09" type="relative" name="Wall"/>
+                <param value="1-window_side_offset_09*2" type="relative" name="EntranceTopMainMain"/>
+                <param value="window_side_offset_09" type="relative" name="Wall"/>
+            </split>
+        </rule>
+        <rule name="EntranceTopMainMain">
+            <extrude height="-0.6"/>
+            <comp>
+                <param value="Wall" name="side"/>
+                <param value="DoorGlass" name="top"/>
+            </comp>
+        </rule>
+    </grammar>
+    <grammar>
+        <rule name="DoorGlass">
+            <setupProjection axesSelector="scope.xy">
+                <param value="1" type="relative" name="texWidth"/>
+                <param value="1" type="relative" name="texHeight"/>
+            </setupProjection>
+            <texture texturePath="material/bldg2/door_glass.tif"/>
+        </rule>
+        <rule name="LedgeFace">
+            <color s="#c9b8a2"/>
+        </rule>
+        <rule name="RoofLedge">
+            <color s="#c9b8a2"/>
+        </rule>
+        <rule name="RoofTop">
+            <setupProjection axesSelector="scope.xy">
+                <param value="1" type="relative" name="texWidth"/>
+                <param value="1" type="relative" name="texHeight"/>
+            </setupProjection>
+            <texture texturePath="material/bldg2/roof.tif"/>
+        </rule>
+        <rule name="Wall">
+            <texture texturePath="material/bldg2/wall.png"/>
+        </rule>
+        <rule name="WindowFrame">
+            <color s="#f0e8e5"/>
+        </rule>
+        <rule name="WindowGlass">
+            <texture texturePath="material/bldg2/window_glass.png"/>
+        </rule>
+        <rule name="WindowSill">
+            <color s="#c9b8a2"/>
+        </rule>
+    </grammar>
+</grammars>
